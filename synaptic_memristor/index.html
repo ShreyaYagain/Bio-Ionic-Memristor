@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Synaptic Biomemristor – Software Metrics Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+  :root {
+  /* Blue–Navy Accent Palette */
+  --blue-1: #194f97;   /* royal blue */
+  --blue-2: #020715;   /* near-black navy */
+  --blue-3: #081a4b;   /* deep navy */
+  --blue-4: #0a1a33;   /* midnight blue */
+  --blue-5: #3b82f6;   /* bright blue */
+  --blue-6: #93c5fd;   /* light blue */
+
+  /* Backgrounds */
+  --bg-main: #000000;
+  --bg-elevated: #05070f;
+  --bg-card: #0a0d18;
+
+  /* Accents */
+  --accent: var(--blue-1);
+  --accent-soft: rgba(25, 79, 151, 0.22);
+  --accent-strong: var(--blue-3);
+
+  /* Text */
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+
+  --border-subtle: #1e293b;
+  --card-radius: 18px;
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: radial-gradient(circle at top, #0a1a33 0%, #000 45%, #000 100%);
+  color: var(--text-main);
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 0 0, rgba(25, 79, 151, 0.25), transparent 55%),
+    radial-gradient(circle at 100% 0, rgba(10, 26, 51, 0.22), transparent 60%),
+    var(--bg-main);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
+  margin-bottom: 28px;
+}
+
+.header-left,
+.header-center,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* (Fallback) Logo gradient to blue */
+.logo-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 0%, #e5f0ff 0, #3b82f6 35%, #020715 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0b0614;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.9);
+}
+
+.college-badge {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  font-size: 12px;
+  color: var(--text-muted);
+  background: rgba(15, 23, 42, 0.9);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.6);
+}
+
+.title-block {
+  text-align: center;
+}
+
+.title-block h1 {
+  font-size: 28px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f9fafb;
+}
+
+/* TITLE BLUE-GRADIENT */
+.title-highlight {
+  background: linear-gradient(
+    90deg,
+    var(--blue-1),
+    #2563eb,
+    #60a5fa
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.title-block p {
+  margin-top: 4px;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Sections */
+.section {
+  margin-bottom: 32px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.section-pill {
+  width: 8px;
+  height: 28px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent-strong), var(--accent));
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.7);
+}
+
+.section-title {
+  font-size: 18px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e5e7eb;
+}
+
+.section-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-left: auto;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 700px) {
+  .card-grid.cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .card-grid.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Cards */
+.card {
+  position: relative;
+  border-radius: var(--card-radius);
+  padding: 16px 16px 14px;
+  background:
+    radial-gradient(circle at 0 0, rgba(25, 79, 151, 0.24), transparent 55%),
+    radial-gradient(circle at 100% 0, rgba(10, 26, 51, 0.22), transparent 55%),
+    linear-gradient(145deg, #000, #0a0d18 45%, #081a4b 100%);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    120deg,
+    rgba(25, 79, 151, 0.6),
+    rgba(10, 26, 51, 0.4),
+    transparent
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.card-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+.card-tag {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: var(--text-muted);
+}
+
+.card-title {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+/* LIGHTER BLUE METRICS */
+.card-metric {
+  margin-top: 8px;
+  font-size: 22px;
+  font-weight: 600;
+  background: linear-gradient(90deg, var(--blue-5), var(--blue-6));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.card-body {
+  margin-top: 6px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mini-pill {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text-muted);
+}
+
+/* Abstract Card */
+.abstract-card .card-title {
+  font-size: 18px;
+}
+
+.abstract-card .card-body {
+  font-size: 16px;
+}
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Header -->
+    <header>
+      <div class="header-left">
+        <div class="logo-circle" style="background:none; box-shadow:none; padding:0;">
+        <img src="assets/team-logo.png" alt="Team Logo" style="width:42px; height:42px; border-radius:50%; object-fit:cover;">
+</div>
+
+        <div>
+
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="title-block">
+          <h1>
+            <span class="title-highlight">Bio Ionic Memristor for Neuromorphic Computing</span><br/>
+
+          </h1>
+          <p>Team 38 - Synaptica • AI in Electronics</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="college-badge" style="background:none; border:none; box-shadow:none; padding:0;">
+        <img src="assets/college-logo.png" alt="College Logo" style="height:42px; object-fit:contain;">
+</div>
+
+      </div>
+    </header>
+<!-- Data Source Note -->
+    <div style="
+    text-align:center;
+    color:#ef4444; 
+    font-size:14px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    margin-bottom:12px;
+    font-family: 'Space Grotesk', sans-serif;
+    ">
+    Data sourced from existing literature
+    </div>
+
+    <!-- Abstract Section -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-pill"></div>
+        <div class="section-title">Abstract</div>
+        <div class="section-subtitle">Neuromorphic biomemristor</div>
+      </div>
+
+      <div class="card abstract-card">
+        <div class="card-header">
+          <div class="card-label">Overview</div>
+        </div>
+        <div class="card-title">Memristive synapse for neuromorphic computing</div>
+        <div class="card-body">
+Neuromorphic computing models brain-like processing by combining memory and computation in one element.
+A memristor adjusts resistance based on past input, enabling synaptic plasticity.
+Gelatin and honey act as ionic, low-power, eco-friendly materials for simple neuromorphic devices. AI hardware consumes high energy, creating scalability limits for future systems.
+Global e-waste exceeds 50 million tonnes per year, demanding sustainable alternatives.
+Bio-memristors offer low-cost, green hardware synapses for efficient neuromorphic computing.
+
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Switching Performance -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-pill"></div>
+        <div class="section-title">Switching Performance</div>
+        <div class="section-subtitle">Key resistive switching metrics</div>
+      </div>
+
+      <!-- Row 1: 3 cards -->
+      <div class="card-grid cols-3" style="margin-bottom: 16px;">
+        <!-- Vset -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Vset</div>
+            <div class="card-tag">SET threshold</div>
+          </div>
+          <div class="card-title">Switching to low-resistance state</div>
+          <div class="card-metric">0.21 – 3.0&nbsp;V</div>
+          <div class="card-body">
+SET voltages range from ~0.21–0.23 V up to 0.6–3.0 V depending on stack and thickness.          </div>
+        </div>
+
+        <!-- Vreset -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Vreset</div>
+            <div class="card-tag">RESET threshold</div>
+          </div>
+          <div class="card-title">Switching to high-resistance state</div>
+          <div class="card-metric">−0.04 – −3.0&nbsp;V</div>
+          <div class="card-body">
+RESET voltages span −0.04 V to −3.0 V, restoring the high-resistance state in gelatin-CNT, honey, and carbon-dot devices.
+          </div>
+        </div>
+
+        <!-- ON/OFF ratio -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">ON/OFF ratio</div>
+            <div class="card-tag">ION / IOFF</div>
+          </div>
+          <div class="card-title">Dynamic resistance window</div>
+          <div class="card-metric">10² – 10⁶</div>
+          <div class="card-body">
+ON/OFF ratios span 10<sup>2</sup>–10<sup>4</sup> (gelatin/honey) and reach 10<sup>6</sup> (carbon-dot, honey-CNT).
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: 2 cards -->
+      <div class="card-grid cols-2">
+        <!-- Endurance -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Endurance</div>
+            <div class="card-tag">Switching cycles</div>
+          </div>
+          <div class="card-title">Cycling stability of organic memristors</div>
+          <div class="card-metric">35 – 10⁶ cycles</div>
+          <div class="card-body">
+Endurance ranges from ~35 cycles (gelatin-CNT) to >10<sup>3</sup> cycles (honey-CNT) and ~10<sup>6</sup> cycles (carbon-dot).
+          </div>
+        </div>
+
+        <!-- Retention -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Retention</div>
+            <div class="card-tag">State stability</div>
+          </div>
+          <div class="card-title">Non-volatile conductance retention</div>
+          <div class="card-metric">10⁴ – 10⁶&nbsp;s</div>
+          <div class="card-body">
+Retention is stable for ~10<sup>4</sup> s, extending to 10<sup>5</sup>–10<sup>6</sup> s and multi-year extrapolated stability.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Device Physics -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-pill"></div>
+        <div class="section-title">Device Physics</div>
+        <div class="section-subtitle">I–V analysis &amp; mechanisms</div>
+      </div>
+
+      <div class="card-grid cols-2">
+        <!-- Log(I) vs Log(V) slopes -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Log(I) – Log(V)</div>
+            <div class="card-tag">Slope analysis</div>
+          </div>
+          <div class="card-title">Extracted slopes from I–V characteristics</div>
+          <div class="card-metric">1.17 &amp; 3.21</div>
+          <div class="card-body">
+Low-bias slope is ~1.17 (ohmic), rising to ~3.21 in the trap-filled SCLC regime.
+          </div>
+        </div>
+
+        <!-- Conduction mechanism -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Conduction mechanism</div>
+            <div class="card-tag">Identified mode</div>
+          </div>
+          <div class="card-title">Ohmic to trap-filled SCLC transition</div>
+          <div class="card-metric">Ohmic → TF-SCLC</div>
+          <div class="card-body">
+Conduction transitions from ohmic (≈1) to SCLC (≈2) to trap-filled (>3).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Neuromorphic Metrics -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-pill"></div>
+        <div class="section-title">Neuromorphic Metrics</div>
+        <div class="section-subtitle">Synaptic performance</div>
+      </div>
+
+      <!-- Row 1 -->
+      <div class="card-grid cols-2" style="margin-bottom: 16px;">
+        <!-- PPF index -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">PPF index</div>
+            <div class="card-tag">Short-term plasticity</div>
+          </div>
+          <div class="card-title">Paired-pulse facilitation behaviour</div>
+          <div class="card-metric">≈ 370&nbsp;%</div>
+          <div class="card-body">
+Paired-pulse facilitation reaches ~370 % at Δt ≈ 20 ms with ms-scale decay constants.
+          </div>
+        </div>
+
+        <!-- Conductance states -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">Conductance states</div>
+            <div class="card-tag">Analog synapse</div>
+          </div>
+          <div class="card-title">Multi-level honey memristor</div>
+          <div class="card-metric">256 levels</div>
+          <div class="card-body">
+Honey synapses provide 256 conductance states for fine weight tuning.
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="card-grid cols-2">
+        <!-- NL LTP -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">NL LTP</div>
+            <div class="card-tag">Potentiation non-linearity</div>
+          </div>
+          <div class="card-title">Long-term potentiation curve fit</div>
+          <div class="card-metric">+0.01</div>
+          <div class="card-body">
+LTP non-linearity is NL-LTP ≈ +0.01 (near-linear potentiation).
+          </div>
+        </div>
+
+        <!-- NL LTD -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-label">NL LTD</div>
+            <div class="card-tag">Depression non-linearity</div>
+          </div>
+          <div class="card-title">Long-term depression curve fit</div>
+          <div class="card-metric">−1.93</div>
+          <div class="card-body">
+LTD non-linearity is NL-LTD ≈ −1.93 (strong non-linear depression).
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
